@@ -1,6 +1,7 @@
 const { response } = require('express')
 const Employee = require('../models/Employee')
 
+
 const index = (req,res) => {
     Employee.find()
     .then(response => {
@@ -35,6 +36,7 @@ const show = (req,res) => {
 const store = (req,res) => {
     let employee =  new Employee({
         name: req.body.name,
+        id:req.body.id,
         email: req.body.email,
         phone: req.body.phone,
         age: req.body.age
@@ -57,6 +59,7 @@ const update = (req,res) => {
     let employeeID = req.body.employeeID
     let updatedData = {
         name: req.body.name,
+        id:req.body.id,
         email: req.body.email,
         phone: req.body.phone,
         age: req.body.age
@@ -91,6 +94,32 @@ const destroy = (req,res) => {
 }
 
 
+const employee = (req, res) => {
+    Employee.aggregate([
+        {
+            $lookup: {
+                from: "admin",
+                localField: "id",
+                foreignField: "id",
+                as: "designation",
+            }  
+        },
+        {
+            $unwind: "$designation_info",
+        }
+    ])
+    .then(response => {
+        res.json({
+            response
+        })
+    }) 
+    .catch(error => {
+        res.json({
+            message: 'An error occured'
+        })
+    })
+}
+
 module.exports = {
-    index, show, store, update, destroy
+    index, show, store, update, destroy, employee
 }

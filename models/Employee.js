@@ -1,19 +1,25 @@
 const mongoose = require('mongoose')
+const Admin = require('./Admin')
 const Schema = mongoose.Schema
 
 const employeeSchema = new Schema({
     name:{
-        type:String
+        type : String
+    },
+    designation:{
+        type : String
     },
     email:{
-        type: String
+        type : String
     },
     phone:{
-        type: String
+        type : String
     },
     age:{
-        type: Number
+        type : Number
     }
 } , {timestamps:true})
+
 const Employee = mongoose.model('Employee',employeeSchema)
+
 module.exports = Employee
